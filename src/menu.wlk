@@ -108,7 +108,7 @@ class Menu {
     generadorDeObjetos.construirMisil()
 	  generadorDeObjetos.constuirMoneda()
     generadorDeObjetos.constuirMoneda()
-    generadorDeObjetos.construirToken()
+    game.schedule(25000, {generadorDeObjetos.construirToken()})
     generadorDeObjetos.construirReloj()
     generadorDeObjetos.gravedad()
 

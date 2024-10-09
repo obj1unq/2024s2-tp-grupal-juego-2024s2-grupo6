@@ -120,7 +120,7 @@ class Token {
         if (self.saliDelTablero()){ 
             game.removeVisual(self) // Elimina el token actual
             game.removeTickEvent("token") // Elimina el onTick
-            game.schedule(30000, {self.reaparecer()})
+            game.schedule(17000, {self.reaparecer()})
             // Llama al método para reaparecer
         }
     }
