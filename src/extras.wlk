@@ -61,14 +61,14 @@ object generadorDeObjetos {
         var misil = new Misil(position = game.at(12, randomizer.anyY()))
         game.addVisual(misil)
         game.onTick(400, "misil", {misil.mover(izquierda)})
-        game.onTick(1, "misil", {misil.cambiarImagen()})
+        game.onTick(120, "misil", {misil.cambiarImagen()})
       
     }
 
     method constuirMoneda() {
         var coin = new Coin(position = game.at(12, randomizer.anyY()))
         game.addVisual(coin)
-        game.onTick(1, "coin", {coin.cambiarImagen()})
+        game.onTick(120, "coin", {coin.cambiarImagen()})
         game.onTick(600, "coin", {coin.mover(izquierda)})
       
     }
@@ -76,7 +76,7 @@ object generadorDeObjetos {
     method construirToken() {
         var token = new Token(position = game.at(12, randomizer.anyY()))
         game.addVisual(token)
-        game.onTick(100, "token", {token.cambiarImagen()})
+        game.onTick(120, "token", {token.cambiarImagen()})
 	    game.onTick(600, "token", {token.mover(izquierda)})
       
     }
@@ -87,7 +87,7 @@ object generadorDeObjetos {
     }
 
     method gravedad() {
-        game.onTick(50, "gravedad", {barry.caer()}) 
+        game.onTick(130, "gravedad", {barry.caer()}) 
     }
   
 }
@@ -186,6 +186,7 @@ class Coin {
 
     method colisiono(personaje) {
         self.desaparecer()
+        administrador.sumarMoneda()
     }
 
     method desaparecer() {
@@ -203,7 +204,7 @@ object fondo {
 }
 
 object reloj {
-    var segundos = 0
+    var property segundos = 0
 
     method position() {
         return game.at(0, game.height() - 1 )
@@ -214,7 +215,7 @@ object reloj {
     }
 
     method textColor() {
-        return "FFFF00FF"
+        return "FFFFFFFF"
     }
 
     method tick() {
@@ -224,4 +225,6 @@ object reloj {
     method colisiono(personaje) {
 
     }
+
+
 }

@@ -8,7 +8,7 @@ import menu.*
 
 program jetPackGame {
 	var menu = new Menu() // Crear una instancia del menú
-     menu.init() // Inicializar el menú
+    menu.init() // Inicializar el menú
 	
 /*
 	game.title("jetpackjoyride")

@@ -4,6 +4,33 @@ import posiciones.*
 import extras.*
 import randomizer.*
 
+object administrador {
+
+  method sumarMoneda() {
+      contadorMonedas.agregarMoneda()
+    }
+}
+
+object contadorMonedas {
+  var property monedas = 0
+
+  method position() {
+    return game.at(0, game.height() - 2)
+  }
+
+  method agregarMoneda() {
+    monedas += 1
+  }
+
+  method text() {
+        return monedas.toString() +"\n" + "\n" + "\n"
+    }
+
+    method textColor() {
+        return "FFFF00FF"
+    }
+
+}
 object fondoMenu {
 	method image() {
     return "menu.png"
@@ -13,8 +40,14 @@ object fondoMenu {
 }
 
 object fondoJuego {
+  var nivel = 1
+
   method image() {
-    return "fondo123.png"
+    return "back" + nivel + ".png"
+  }
+
+  method subirNivel() {
+    nivel += 1
   }
 
   method position() = game.at(0,0)
@@ -66,6 +99,7 @@ class Menu {
 	  game.addVisual(fondoJuego)
 	  game.addVisual(reloj)
 	  game.addVisual(barry)
+    game.addVisual(contadorMonedas)
 
     
 
@@ -81,7 +115,9 @@ class Menu {
 
 	  keyboard.up().onPressDo({barry.volar()})
 	  keyboard.w().onPressDo({barry.volar()})
-	
+  
+    game.onTick(10000, "fondo", {fondoJuego.subirNivel()})
+
     // Colisiones
     game.onCollideDo(barry, {cosa => cosa.colisiono(barry)})  
   }
