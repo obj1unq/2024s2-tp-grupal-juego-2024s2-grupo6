@@ -44,15 +44,34 @@ class Misil {
     }
 
     method colisiono(personaje) {
+
+        if (contadorVidasBarry.vidas() == 1){
         game.schedule(200, {self.pararJuegoYMostrarGameOver()})
+        } else if (contadorVidasBarry.vidas() >= 3){
+            administrador.sacarVida(1)
+        }
+            else if (contadorVidasBarry.vidas() == 2 and barry.transformacion() == "gravedad" ){
+                administrador.sacarVida(1)
+                generadorDeObjetos.gravedad()
+                personaje.destransformarse()
+            }
+            else if (contadorVidasBarry.vidas() == 2 and barry.transformacion() == "ssj" ){
+                administrador.sacarVida(1)
+                personaje.destransformarse()
+                game.removeTickEvent("ssjimagen")
+            }
     }
 
     method pararJuegoYMostrarGameOver() {
 		game.removeVisual(botonPlay)
-		game.removeVisual(fondoJuego)
-		game.addVisual(fondoMenu)
+		//game.removeVisual(fondoJuego)
+		game.addVisual(fondoFinish)
+        game.addVisual(hasVolado)
 		game.addVisual(gameOver)
-		game.schedule(400,{game.stop()})
+        reloj.position(game.at(5,7))
+        contadorMonedas.position(game.at(6,2))
+        contadorVidasBarry.position(game.at(11,11))
+		game.schedule(100,{game.stop()})
 	}
 }
 
@@ -60,24 +79,24 @@ object generadorDeObjetos {
     method construirMisil() {
         var misil = new Misil(position = game.at(12, randomizer.anyY()))
         game.addVisual(misil)
-        game.onTick(400, "misil", {misil.mover(izquierda)})
-        game.onTick(120, "misil", {misil.cambiarImagen()})
+        game.onTick(300, "misil", {misil.mover(izquierda)})
+        game.onTick(60, "misil", {misil.cambiarImagen()})
       
     }
 
     method constuirMoneda() {
         var coin = new Coin(position = game.at(12, randomizer.anyY()))
         game.addVisual(coin)
-        game.onTick(120, "coin", {coin.cambiarImagen()})
-        game.onTick(600, "coin", {coin.mover(izquierda)})
+        game.onTick(60, "coin", {coin.cambiarImagen()})
+        game.onTick(400, "coin", {coin.mover(izquierda)})
       
     }
 
     method construirToken() {
         var token = new Token(position = game.at(12, randomizer.anyY()))
         game.addVisual(token)
-        game.onTick(120, "token", {token.cambiarImagen()})
-	    game.onTick(600, "token", {token.mover(izquierda)})
+        game.onTick(20, "token", {token.cambiarImagen()})
+	    game.onTick(300, "token", {token.mover(izquierda)})
       
     }
 
@@ -120,7 +139,7 @@ class Token {
         if (self.saliDelTablero()){ 
             game.removeVisual(self) // Elimina el token actual
             game.removeTickEvent("token") // Elimina el onTick
-            game.schedule(17000, {self.reaparecer()})
+            game.schedule(45500, {self.reaparecer()})
             // Llama al método para reaparecer
         }
     }
@@ -134,6 +153,8 @@ class Token {
 
     method colisiono(personaje) {
         self.desaparecer()
+        barry.transformarse()
+        
     }
 
     method desaparecer() {
@@ -205,10 +226,8 @@ object fondo {
 
 object reloj {
     var property segundos = 0
-
-    method position() {
-        return game.at(0, game.height() - 1 )
-    }
+    var property position = game.at(0,9)
+    
 
     method text() {
         return segundos.toString()
