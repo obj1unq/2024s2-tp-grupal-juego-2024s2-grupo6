@@ -44,22 +44,13 @@ class Misil {
     }
 
     method colisiono(personaje) {
-
         if (contadorVidasBarry.vidas() == 1){
-        game.schedule(200, {self.pararJuegoYMostrarGameOver()})
+            game.schedule(200, {self.pararJuegoYMostrarGameOver()})
         } else if (contadorVidasBarry.vidas() >= 3){
             administrador.sacarVida(1)
+        } else if (contadorVidasBarry.vidas() == 2){
+            personaje.transformacion().colisiono(personaje)
         }
-            else if (contadorVidasBarry.vidas() == 2 and barry.transformacion() == "gravedad" ){
-                administrador.sacarVida(1)
-                generadorDeObjetos.gravedad()
-                personaje.destransformarse()
-            }
-            else if (contadorVidasBarry.vidas() == 2 and barry.transformacion() == "ssj" ){
-                administrador.sacarVida(1)
-                personaje.destransformarse()
-                game.removeTickEvent("ssjimagen")
-            }
     }
 
     method pararJuegoYMostrarGameOver() {

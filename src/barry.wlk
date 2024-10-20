@@ -76,4 +76,18 @@ object ssj {
 	method cambiarImagen() {
         imagenActualIndex = (imagenActualIndex + 1) % imagenes.size()
     }
+
+	method colisiono(personaje) {
+		administrador.sacarVida(1)
+        personaje.destransformarse()
+        game.removeTickEvent("ssjimagen")
+	}
+}
+
+object gravedad {
+	method colisiono(personaje) {
+		administrador.sacarVida(1)
+        generadorDeObjetos.gravedad()
+        personaje.destransformarse()
+	}
 }
