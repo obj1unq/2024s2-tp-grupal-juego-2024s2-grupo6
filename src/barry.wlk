@@ -5,51 +5,32 @@ import menu.*
 
 object barry {
 	var property position = game.at(1,5)
-	var property imagenActual = "barrynormal.png"
-	const property imagenes = ["barrysupersj1.png", "barrysupersj2.png", "barrysupersj3.png","barrysupersj4.png"]
-	var property imagenActualIndex = 0
-	
-	var property transformacion = "normal"
-	
+	var property transformacion = normal
+
 	method image() {
-		return if (transformacion == "ssj"){
-			imagenes.get(imagenActualIndex)
-		}
-		else imagenActual
+		return transformacion.image()
 	}
 
-	method cambiarImagen() {
-        imagenActualIndex = (imagenActualIndex + 1) % imagenes.size()
-    }
-
 	method mover(direccion) {
-        var nuevaPosicion = direccion.siguiente(self.position()) 
+        const nuevaPosicion = direccion.siguiente(self.position()) 
         tablero.validarDentro(nuevaPosicion) // Validar el movimiento
         self.position(nuevaPosicion) // Actualizar la posición 
     }
 
 	method volar() {
-	  self.mover(arriba)
-	  
-	  	imagenActual = "barryvolando.png"
-		
+	  	self.mover(arriba)
+		normal.image("barryvolando.png")
 	}
 	
     method caer() {
-	  self.mover(abajo)
-	  
-		
-	  	imagenActual = "barrynormal.png"
-		
-		
-	
+	  	self.mover(abajo)
+	  	normal.image("barrynormal.png")
 	}
 	
 	method transformarse() {
-
-		transformacion = "ssj"
+		transformacion = ssj
 		administrador.sumarVida(2)
-		game.onTick(60, "ssjimagen", {self.cambiarImagen()})
+		game.onTick(60, "ssjimagen", {ssj.cambiarImagen()})
 		game.schedule(20000, {self.destransformarse()})
 		game.schedule(20000, {contadorVidasBarry.vidas(1)})
 
@@ -65,10 +46,8 @@ object barry {
     }	*/	
 }
 
-		method destransformarse() {
-		transformacion = "normal"
-		
-		
+	method destransformarse() {
+		transformacion = normal
 	}
 
 	//method subirGravedad() {
@@ -80,4 +59,21 @@ object barry {
 	//	game.removeTickEvent("gravedad")
 	//	imagenActual = "gravity2.png"
 	//}
+}
+
+object normal {
+	var property image = "barrynormal.png"
+}
+
+object ssj {
+	const property imagenes = ["barrysupersj1.png", "barrysupersj2.png", "barrysupersj3.png","barrysupersj4.png"]
+	var property imagenActualIndex = 0
+
+	method image() {
+		return imagenes.get(imagenActualIndex)
+	}
+
+	method cambiarImagen() {
+        imagenActualIndex = (imagenActualIndex + 1) % imagenes.size()
+    }
 }
