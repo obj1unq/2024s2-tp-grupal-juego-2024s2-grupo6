@@ -4,96 +4,30 @@ import posiciones.*
 import randomizer.*
 import menu.*
 
-class Misil {
-    var property position = game.at(9, 5)
-    const property imagenes = ["misil1.png", "misil2.png", "misil3.png", "misil4.png", "misil5.png", "misil6.png"]
-    var property imagenActualIndex = 0
-
-    method image() {
-        return imagenes.get(imagenActualIndex)
-    }
-
-    method tipo() {
-        return "Misil"
-    }
-    
-    method cambiarImagen() {
-        imagenActualIndex = (imagenActualIndex + 1) % imagenes.size()
-    }
-
-    method mover(direccion) {
-        var nuevaPosicion = direccion.siguiente(self.position()) 
-        
-        tablero.validarDentro(nuevaPosicion) // Validar el movimiento
-        self.position(nuevaPosicion) // Actualizar la posición
-
-        // Verifica si el misil llegó al borde izquierdo
-        if (self.saliDelTablero()){ 
-            game.removeVisual(self) // Elimina el misil actual
-            game.removeTickEvent("misil") // Elimina el onTick
-            self.reaparecer() // Llama al método para reaparecer
-        }
-    }
-    method saliDelTablero() {
-        return self.position().x() == -1
-    }
-
-    method reaparecer() {
-        generadorDeObjetos.construirMisil()
-        generadorDeObjetos.construirMisil()
-    }
-
-    method colisiono(personaje) {
-        if (contadorVidasBarry.vidas() == 1){
-            game.schedule(200, {self.pararJuegoYMostrarGameOver()})
-        } else if (contadorVidasBarry.vidas() >= 3){
-            administrador.sacarVida(1)
-        } else if (contadorVidasBarry.vidas() == 2){
-            personaje.transformacion().colisiono(personaje)
-        }
-    }
-
-    method pararJuegoYMostrarGameOver() {
-		game.removeVisual(botonPlay)
-		//game.removeVisual(fondoJuego)
-		game.addVisual(fondoFinish)
-        game.addVisual(hasVolado)
-		game.addVisual(gameOver)
-        reloj.position(game.at(5,7))
-        contadorMonedas.position(game.at(6,2))
-        contadorVidasBarry.position(game.at(11,11))
-		game.schedule(100,{game.stop()})
-	}
-}
-
 object generadorDeObjetos {
     method construirMisil() {
-        var misil = new Misil(position = game.at(12, randomizer.anyY()))
+        const misil = new Misil(position = game.at(12, randomizer.anyY()), imagenes = ["misil1.png", "misil2.png", "misil3.png", "misil4.png", "misil5.png", "misil6.png"])
         game.addVisual(misil)
         game.onTick(300, "misil", {misil.mover(izquierda)})
         game.onTick(60, "misil", {misil.cambiarImagen()})
-      
     }
 
-    method constuirMoneda() {
-        var coin = new Coin(position = game.at(12, randomizer.anyY()))
+    method construirMoneda() {
+        const coin = new Coin(position = game.at(12, randomizer.anyY()), imagenes = ["7.png","2.png","3.png","4.png","5.png","6.png"])
         game.addVisual(coin)
         game.onTick(60, "coin", {coin.cambiarImagen()})
         game.onTick(400, "coin", {coin.mover(izquierda)})
-      
     }
 
     method construirToken() {
-        var token = new Token(position = game.at(12, randomizer.anyY()))
+        const token = new Token(position = game.at(12, randomizer.anyY()), imagenes = ["token.png","token1.png","token2.png","token3.png","token4.png","token5.png","token6.png","token7.png","token8.png","token9.png","token10.png"])
         game.addVisual(token)
         game.onTick(20, "token", {token.cambiarImagen()})
 	    game.onTick(300, "token", {token.mover(izquierda)})
-      
     }
 
     method construirReloj() {
         game.onTick(1000, "reloj", {reloj.tick()})
-      
     }
 
     method gravedad() {
@@ -102,43 +36,93 @@ object generadorDeObjetos {
   
 }
 
-class Token {
-    var property position = game.at(9,7)
-    const property imagenes = ["token.png","token1.png","token2.png","token3.png","token4.png","token5.png","token6.png","token7.png","token8.png","token9.png","token10.png"]
+class ObjetoVolador {
+    var property position
+    const property imagenes
     var property imagenActualIndex = 0
     var property visible = true
-
-    method image() {
-        return if (visible) imagenes.get(imagenActualIndex) else null
-    }
-
-    method tipo() {
-        return "Token"
-    }
 
     method cambiarImagen() {
         imagenActualIndex = (imagenActualIndex + 1) % imagenes.size()
     }
 
     method mover(direccion) {
-        var nuevaPosicion = direccion.siguiente(self.position()) 
+        const nuevaPosicion = direccion.siguiente(self.position()) 
         
         tablero.validarDentro(nuevaPosicion) // Validar el movimiento
         self.position(nuevaPosicion) // Actualizar la posición
 
-        // Verifica si el misil llegó al borde izquierdo
+        // Verifica si el objeto llegó al borde izquierdo
         if (self.saliDelTablero()){ 
-            game.removeVisual(self) // Elimina el token actual
-            game.removeTickEvent("token") // Elimina el onTick
-            game.schedule(45500, {self.reaparecer()})
-            // Llama al método para reaparecer
+            self.llegoAlBorde()
         }
     }
+
+    method llegoAlBorde() {
+        game.removeVisual(self) // Elimina el objeto actual
+        game.removeTickEvent(self.tipo()) // Elimina el onTick
+    }
+
     method saliDelTablero() {
         return self.position().x() == -1
     }
 
-    method reaparecer() {
+    method desaparecer() {
+        visible = false
+        game.removeVisual(self)
+    }
+
+    method image() {
+        return if (visible) imagenes.get(imagenActualIndex) else null
+    }
+
+    method reaparecer()
+    method tipo() 
+}
+
+class Misil inherits ObjetoVolador {
+
+    override method image() {
+        return imagenes.get(imagenActualIndex)
+    }
+
+    override method tipo() {
+        return "misil"
+    }
+
+    override method llegoAlBorde() {
+        super()
+        self.reaparecer()
+    }
+
+    override method reaparecer() {
+        generadorDeObjetos.construirMisil()
+        generadorDeObjetos.construirMisil()
+    }
+
+    method colisiono(personaje) {
+        if (contadorVidasBarry.vidas() == 1){
+            game.schedule(200, {administrador.pararJuegoYMostrarGameOver()})
+        } else if (contadorVidasBarry.vidas() >= 3){
+            administrador.sacarVida(1)
+        } else if (contadorVidasBarry.vidas() == 2){
+            personaje.transformacion().colisiono(personaje)
+        }
+    }
+}
+
+class Token inherits ObjetoVolador {
+
+    override method tipo() {
+        return "token"
+    }
+
+    override method llegoAlBorde() {
+        super()
+        game.schedule(45500, {self.reaparecer()})
+    }
+
+    override method reaparecer() {
         generadorDeObjetos.construirToken()
     }
 
@@ -148,62 +132,26 @@ class Token {
         
     }
 
-    method desaparecer() {
-        visible = false
-        game.removeVisual(self)
-    }
-
 }
-class Coin {
-    var property position = game.at(9,3)
-    const property imagenes = ["7.png","2.png","3.png","4.png","5.png","6.png"]
-    var property imagenActualIndex = 0
-    var property visible = true // Propiedad para saber si está visible
+class Coin inherits ObjetoVolador {
 
-    method image() {
-        return if (visible) imagenes.get(imagenActualIndex) else null
+    override method tipo() {
+        return "coin"
     }
 
-    method tipo() {
-        return "Coin"
+    override method llegoAlBorde() {
+        super()
+        self.reaparecer()
     }
 
-    method cambiarImagen() {
-        imagenActualIndex = (imagenActualIndex + 1) % imagenes.size()
-    }
-
-    method mover(direccion) {
-        var nuevaPosicion = direccion.siguiente(self.position()) 
-        
-        tablero.validarDentro(nuevaPosicion) // Validar el movimiento
-        self.position(nuevaPosicion) // Actualizar la posición
-
-        // Verifica si el misil llegó al borde izquierdo
-        if (self.saliDelTablero()){ 
-            game.removeVisual(self) // Elimina el coin actual
-            game.removeTickEvent("coin") // Elimina el onTick
-            self.reaparecer()
-            // Llama al método para reaparecer
-        }
-    }
-    method saliDelTablero() {
-        return self.position().x() == -1
-    }   
-
-    method reaparecer() {
-        // Genera una nueva posición aleatoria en el eje Y
-        generadorDeObjetos.constuirMoneda()
-        generadorDeObjetos.constuirMoneda()
+    override method reaparecer() {
+        generadorDeObjetos.construirMoneda()
+        generadorDeObjetos.construirMoneda()
     }
 
     method colisiono(personaje) {
         self.desaparecer()
         administrador.sumarMoneda()
-    }
-
-    method desaparecer() {
-        visible = false // Desactivar la visibilidad
-        game.removeVisual(self) // Quitar visualmente el objeto
     }
 }
 
@@ -235,6 +183,4 @@ object reloj {
     method colisiono(personaje) {
 
     }
-
-
 }
