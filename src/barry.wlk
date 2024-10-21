@@ -50,6 +50,10 @@ object barry {
 		transformacion = normal
 	}
 
+	method agarroMoneda() {
+		administrador.sumarMoneda()
+	}
+
 	//method subirGravedad() {
 	//	generadorDeObjetos.gravedad()
 	//	imagenActual = "gravity1.png"

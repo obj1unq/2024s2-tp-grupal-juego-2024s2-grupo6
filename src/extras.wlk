@@ -128,8 +128,7 @@ class Token inherits ObjetoVolador {
 
     method colisiono(personaje) {
         self.desaparecer()
-        barry.transformarse()
-        
+        personaje.transformarse()
     }
 
 }
@@ -151,7 +150,7 @@ class Coin inherits ObjetoVolador {
 
     method colisiono(personaje) {
         self.desaparecer()
-        administrador.sumarMoneda()
+        personaje.agarroMoneda()
     }
 }
 
