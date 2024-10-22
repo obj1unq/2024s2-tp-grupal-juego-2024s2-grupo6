@@ -18,24 +18,30 @@ object barry {
     }
 
 	method volar() {
-	  	self.mover(arriba)
-		normal.image("barryvolando.png")
+	  	transformacion.volar()
 	}
 	
     method caer() {
-	  	self.mover(abajo)
-	  	normal.image("barrynormal.png")
+	  	transformacion.caer()
 	}
 	
 	method transformarse() {
+		
 		transformacion = ssj
 		administrador.sumarVida(2)
 		game.onTick(60, "ssjimagen", {ssj.cambiarImagen()})
 		game.schedule(20000, {self.destransformarse()})
 		game.schedule(20000, {contadorVidasBarry.vidas(1)})
+		
+		/*
+		transformacion = gravedad
+		game.removeTickEvent("gravedad")
+		//game.onTick(50, "subirGravedad", {self.volar()})
+		administrador.sumarVida(1)
+		game.schedule(20000, {self.destransformarse()})
+		game.schedule(20000, {contadorVidasBarry.vidas(1)})
 
-
-		/*if (0.randomUpTo(100) < 30) {
+		if (0.randomUpTo(100) < 30) {
         transformacion = "ssj"  // 30% de probabilidad de convertirse en ssj
 		contadorVidasBarry.agregarVidas(2)
 		game.onTick(60, "ssjimagen", {self.cambiarImagen()} )
@@ -48,30 +54,41 @@ object barry {
 
 	method destransformarse() {
 		transformacion = normal
+		//game.removeTickEvent("bajarGravedad")
+		//game.removeTickEvent("subirGravedad")
+		//generadorDeObjetos.gravedad()
 	}
 
 	method agarroMoneda() {
 		administrador.sumarMoneda()
 	}
-
-	//method subirGravedad() {
-	//	generadorDeObjetos.gravedad()
-	//	imagenActual = "gravity1.png"
-	//}
-
-	//method bajarGravedad() {
-	//	game.removeTickEvent("gravedad")
-	//	imagenActual = "gravity2.png"
-	//}
 }
 
 object normal {
 	var property image = "barrynormal.png"
+
+	method volar() {
+		barry.mover(arriba)
+		image = "barryvolando.png"
+	}
+
+	method caer() {
+	  	barry.mover(abajo)
+	  	image = "barrynormal.png"
+	}
 }
 
 object ssj {
 	const property imagenes = ["barrysupersj1.png", "barrysupersj2.png", "barrysupersj3.png","barrysupersj4.png"]
 	var property imagenActualIndex = 0
+
+	method volar() {
+		barry.mover(arriba)
+	}
+
+	method caer() {
+	  	barry.mover(abajo)
+	}
 
 	method image() {
 		return imagenes.get(imagenActualIndex)
@@ -89,6 +106,30 @@ object ssj {
 }
 
 object gravedad {
+	var property image = "gravity1.png"
+
+	method volar() {
+		barry.mover(arriba)
+		image = "gravity2.png"
+		game.removeTickEvent("bajarGravedad")
+	}
+
+	method caer() {
+	  	barry.mover(abajo)
+		image = "gravity1.png"
+		game.removeTickEvent("subirGravedad")
+	}
+	/*
+	method subirGravedad() {
+		game.removeTickEvent("bajarGravedad")
+		generadorDeObjetos.subirGravedad()
+	}
+
+	method bajarGravedad() {
+		game.removeTickEvent("subirGravedad")
+		generadorDeObjetos.bajarGravedad()
+	}
+	*/
 	method colisiono(personaje) {
 		administrador.sacarVida(1)
         generadorDeObjetos.gravedad()

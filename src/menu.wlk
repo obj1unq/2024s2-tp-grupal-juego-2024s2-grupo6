@@ -156,18 +156,24 @@ class Menu {
     
 
 	    // Crear instancias de clases
-        generadorDeObjetos.construirMisil()
-        generadorDeObjetos.construirMisil()
-	    generadorDeObjetos.construirMoneda()
-        generadorDeObjetos.construirMoneda()
-        game.schedule(25000, {generadorDeObjetos.construirToken()})
+        generadorDeMisiles.construir()
+        game.schedule(1000, {generadorDeMisiles.construir()})
+        game.onTick(50000, "masMisiles" ,{generadorDeMisiles.construir()})
+        game.onTick(50000, "masVelocidad" ,{generadorDeMisiles.aumentarVelocidad()})
+	    generadorDeMonedas.construir()
+        game.schedule(500, {generadorDeMonedas.construir()})
+        game.schedule(700, {generadorDeMonedas.construir()})
+        game.schedule(1000, {generadorDeMonedas.construir()})
+        game.schedule(1500, {generadorDeMonedas.construir()})
+        game.schedule(2000, {generadorDeMonedas.construir()})
+        game.schedule(25000, {generadorDeTokens.construir()})
         generadorDeObjetos.construirReloj()
         generadorDeObjetos.gravedad()
 
 
 	    keyboard.up().onPressDo({barry.volar()})
-	    //keyboard.s().onPressDo({barry.subirGravedad()})
-        //keyboard.w().onPressDo({barry.bajarGravedad()})
+	    //keyboard.s().onPressDo({generadorDeObjetos.subirGravedad()})
+        //keyboard.w().onPressDo({generadorDeObjetos.bajarGravedad()})
   
         game.onTick(50000, "fondo", {fondoJuego.subirNivel()})
         game.schedule(250200, {administrador.pararJuegoYMostrarGameOver()})

@@ -5,42 +5,103 @@ import randomizer.*
 import menu.*
 
 object generadorDeObjetos {
-    method construirMisil() {
-        const misil = new Misil(position = game.at(12, randomizer.anyY()), imagenes = ["misil1.png", "misil2.png", "misil3.png", "misil4.png", "misil5.png", "misil6.png"])
-        game.addVisual(misil)
-        game.onTick(300, "misil", {misil.mover(izquierda)})
-        game.onTick(60, "misil", {misil.cambiarImagen()})
-    }
-
-    method construirMoneda() {
-        const coin = new Coin(position = game.at(12, randomizer.anyY()), imagenes = ["7.png","2.png","3.png","4.png","5.png","6.png"])
-        game.addVisual(coin)
-        game.onTick(60, "coin", {coin.cambiarImagen()})
-        game.onTick(400, "coin", {coin.mover(izquierda)})
-    }
-
-    method construirToken() {
-        const token = new Token(position = game.at(12, randomizer.anyY()), imagenes = ["token.png","token1.png","token2.png","token3.png","token4.png","token5.png","token6.png","token7.png","token8.png","token9.png","token10.png"])
-        game.addVisual(token)
-        game.onTick(20, "token", {token.cambiarImagen()})
-	    game.onTick(300, "token", {token.mover(izquierda)})
-    }
-
     method construirReloj() {
         game.onTick(1000, "reloj", {reloj.tick()})
     }
 
     method gravedad() {
-        game.onTick(130, "gravedad", {barry.caer()}) 
+        game.onTick(100, "gravedad", {barry.caer()}) 
     }
-  
+
+    /*
+    method subirGravedad() {
+        game.onTick(50, "subirGravedad", {barry.volar()})
+    }
+
+    method bajarGravedad() {
+        game.onTick(50, "bajarGravedad", {barry.caer()})
+    }
+    */
+}
+
+class Generador {
+    method construir() {
+        const nuevoObjeto = self.instanciar() 
+        nuevoObjeto.position(self.position())
+        nuevoObjeto.imagenes(self.imagenes())
+        nuevoObjeto.generador(self)
+        nuevoObjeto.aparecer(self.frecuenciaDeImagen(), self.frecuenciaDeMovimiento())
+    }
+
+    method instanciar()
+    method position() {
+        return game.at(12, randomizer.anyY())
+    }
+
+    method imagenes()
+
+    method frecuenciaDeImagen() {
+        return 60 
+    }
+
+    method frecuenciaDeMovimiento() {
+        return 300
+    }
+}
+
+object generadorDeMisiles inherits Generador{
+    var property velocidad = 300
+    
+    override method instanciar() {
+        return new Misil()
+    }
+
+    override method imagenes() {
+        return ["misil1.png", "misil2.png", "misil3.png", "misil4.png", "misil5.png", "misil6.png"]
+    }
+
+    method aumentarVelocidad() {
+        velocidad -= 20
+    }
+
+    override method frecuenciaDeMovimiento() {
+        return velocidad
+    }
+}
+
+object generadorDeMonedas inherits Generador{
+    override method instanciar() {
+        return new Coin()
+    }
+
+    override method imagenes() {
+        return ["7.png","2.png","3.png","4.png","5.png","6.png"]
+    }
+
+    override method frecuenciaDeMovimiento() {
+        return 400
+    }
+}
+
+object generadorDeTokens inherits Generador{
+    override method instanciar() {
+        return new Token()
+    }
+
+    override method imagenes() {
+        return ["token.png","token1.png","token2.png","token3.png","token4.png","token5.png","token6.png","token7.png","token8.png","token9.png","token10.png"]
+    }
+
+    override method frecuenciaDeImagen() {
+        return 20
+    }
 }
 
 class ObjetoVolador {
-    var property position
-    const property imagenes
+    var property position = null
+    var property imagenes = null
     var property imagenActualIndex = 0
-    var property visible = true
+    var property generador = null
 
     method cambiarImagen() {
         imagenActualIndex = (imagenActualIndex + 1) % imagenes.size()
@@ -59,8 +120,8 @@ class ObjetoVolador {
     }
 
     method llegoAlBorde() {
-        game.removeVisual(self) // Elimina el objeto actual
-        game.removeTickEvent(self.tipo()) // Elimina el onTick
+        self.desaparecer()
+        self.reaparecer()
     }
 
     method saliDelTablero() {
@@ -68,16 +129,35 @@ class ObjetoVolador {
     }
 
     method desaparecer() {
-        visible = false
-        game.removeVisual(self)
+        //visible = false //revisar
+        game.removeVisual(self) // Elimina el objeto actual
+        game.removeTickEvent(self.nombreDeEventoMovimiento()) // Elimina el onTick de movimiento
+        game.removeTickEvent(self.nombreDeEventoImagen()) // Elimina el onTick de imagen
     }
 
     method image() {
-        return if (visible) imagenes.get(imagenActualIndex) else null
+        return imagenes.get(imagenActualIndex) //if (visible) imagenes.get(imagenActualIndex) else null
     }
 
-    method reaparecer()
-    method tipo() 
+    method aparecer(frecuenciaImagen, frecuenciaMovimiento) {
+        game.addVisual(self)
+        game.onTick(frecuenciaMovimiento, self.nombreDeEventoMovimiento(), {self.mover(izquierda)})
+        game.onTick(frecuenciaImagen, self.nombreDeEventoImagen(), {self.cambiarImagen()})
+    }
+
+    method nombreDeEventoMovimiento() {
+        return self.prefijoDeEvento() + "Movimiento" + self.identity()
+    }
+
+    method nombreDeEventoImagen() {
+        return self.prefijoDeEvento() + "Imagen" + self.identity()
+    }
+
+    method reaparecer() {
+        generador.construir()
+    }
+
+    method prefijoDeEvento() 
 }
 
 class Misil inherits ObjetoVolador {
@@ -86,18 +166,8 @@ class Misil inherits ObjetoVolador {
         return imagenes.get(imagenActualIndex)
     }
 
-    override method tipo() {
+    override method prefijoDeEvento() {
         return "misil"
-    }
-
-    override method llegoAlBorde() {
-        super()
-        self.reaparecer()
-    }
-
-    override method reaparecer() {
-        generadorDeObjetos.construirMisil()
-        generadorDeObjetos.construirMisil()
     }
 
     method colisiono(personaje) {
@@ -113,44 +183,35 @@ class Misil inherits ObjetoVolador {
 
 class Token inherits ObjetoVolador {
 
-    override method tipo() {
+    override method prefijoDeEvento() {
         return "token"
     }
 
-    override method llegoAlBorde() {
-        super()
-        game.schedule(45500, {self.reaparecer()})
+    override method reaparecer() {
+        game.schedule(45500, {self.reaparecerDiferido()})
     }
 
-    override method reaparecer() {
-        generadorDeObjetos.construirToken()
+    method reaparecerDiferido() {
+        generador.construir()
     }
 
     method colisiono(personaje) {
         self.desaparecer()
         personaje.transformarse()
-    }
-
-}
-class Coin inherits ObjetoVolador {
-
-    override method tipo() {
-        return "coin"
-    }
-
-    override method llegoAlBorde() {
-        super()
         self.reaparecer()
     }
+}
 
-    override method reaparecer() {
-        generadorDeObjetos.construirMoneda()
-        generadorDeObjetos.construirMoneda()
+class Coin inherits ObjetoVolador {
+
+    override method prefijoDeEvento() {
+        return "coin"
     }
 
     method colisiono(personaje) {
         self.desaparecer()
         personaje.agarroMoneda()
+        self.reaparecer()
     }
 }
 
