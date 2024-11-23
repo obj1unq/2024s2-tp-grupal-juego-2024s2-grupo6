@@ -4,40 +4,45 @@ import posiciones.*
 import extras.*
 import randomizer.*
 
+object administradorEscudo {
+
+    method equiparEscudo(personaje) {
+        if (self.validarEscudo()) {
+            personaje.equiparseEscudo()
+        }
+    }
+
+    method validarEscudo() {
+        return contadorMonedas.tieneSuficienteParaEscudo(fondoJuego.nivel()) //Está hecho asi porque la validación en wollokGame no nos funcionaba muy bien.
+    }
+}
+
 object administrador {
-
-    method sumarMoneda() {
-        contadorMonedas.agregarMoneda()
-    }
-
-    method sacarVida(vida) {
-        contadorVidasBarry.restarVida(vida)
-    } 
-
-    method sumarVida(vida) {
-        contadorVidasBarry.agregarVidas(vida)
-    }
-
     method pararJuegoYMostrarGameOver() {
-	    game.removeVisual(botonPlay)
-	    //game.removeVisual(fondoJuego)
+        menu.sonido().stop()
+        game.removeVisual(botonPlay)
 	    game.addVisual(fondoFinish)
         game.addVisual(hasVolado)
 	    game.addVisual(gameOver)
+        game.sound("gameover.mp3").play()
         reloj.position(game.at(5,7))
         contadorMonedas.position(game.at(6,2))
-        contadorVidasBarry.position(game.at(11,11))
+        contadorVidas.position(game.at(11,11))
 	    game.schedule(100,{game.stop()})
+    }
+
+    method sonidoWin() {
+        game.sound("musicawin.mp3").play()
+    }
+
+    method sonidoGameOver() {
+        game.sound("gameover.mp3").play()
     }
 } 
 
 object contadorMonedas {
     var property monedas = 0
     var property position = game.at(0,8)
-  
-    method agregarMoneda() {
-        monedas += 1
-    }
 
     method text() {
         return monedas.toString() +"\n" + "\n" + "\n"
@@ -47,27 +52,25 @@ object contadorMonedas {
         return "FFFF00FF"
     }
 
+    method tieneSuficienteParaEscudo(nivel) {
+        return (monedas >= 25 * (nivel-1))
+    }
 }
 
-object contadorVidasBarry {
-    var property vidas = 1
+object contadorVidas {
     var property position = game.at(0,8)
     
+    method vidas(personaje) {
+        return personaje.vidas()
+    }
+
     method text() {
-        return vidas.toString()
+        return self.vidas(barry).toString()
     }
 
     method textColor() {
         return "FF0000FF"
     }
-
-    method agregarVidas(vida) {
-        vidas = vidas + vida
-    } 
-
-    method restarVida(vida) {
-        vidas -= vida
-    }    
 }
 
 object fondoMenu {
@@ -95,13 +98,14 @@ object fondoFinish {
 }
 
 object fondoJuego {
-    var nivel = 1
+    var property nivel = 1
 
     method image() {
         return "fondoo" + nivel + ".png"
     }
 
     method subirNivel() {
+        game.sound("levelup.mp3").play()
         nivel += 1
     }
 
@@ -123,11 +127,12 @@ object gameOver {
 
     method position() = game.at(6,10)
 }
-class Menu {
+object menu {
     var property juegoIniciado = false
+    const property sonido = game.sound("MainTheme.mp3")
 
     method init() {
-        game.title("jetpackjoyride")
+        game.title("Jetpack Joyride")
 	    game.height(10)
 	    game.width(12)
 	    game.cellSize(50)
@@ -142,6 +147,8 @@ class Menu {
         self.juegoIniciado(true) // Marcar el juego como iniciado
         game.removeVisual(fondoMenu) // Limpiar visuales del menú
         game.removeVisual(botonPlay)
+        sonido.shouldLoop(true)
+        sonido.play()
         // Llamar a la función de inicialización del juego
         self.iniciarJuego()
     }
@@ -152,8 +159,7 @@ class Menu {
 	    game.addVisual(reloj)
 	    game.addVisual(barry)
         game.addVisual(contadorMonedas)
-        game.addVisual(contadorVidasBarry)
-    
+        game.addVisual(contadorVidas)
 
 	    // Crear instancias de clases
         generadorDeMisiles.construir()
@@ -169,15 +175,15 @@ class Menu {
         game.schedule(25000, {generadorDeTokens.construir()})
         generadorDeObjetos.construirReloj()
         generadorDeObjetos.gravedad()
-
+        
 
 	    keyboard.up().onPressDo({barry.volar()})
-	    //keyboard.s().onPressDo({generadorDeObjetos.subirGravedad()})
-        //keyboard.w().onPressDo({generadorDeObjetos.bajarGravedad()})
+        keyboard.space().onPressDo({barry.lanzarPoder()})
   
         game.onTick(50000, "fondo", {fondoJuego.subirNivel()})
-        game.schedule(250200, {administrador.pararJuegoYMostrarGameOver()})
+        game.onTick(50100, "barryescudo", {administradorEscudo.equiparEscudo(barry)})
+        game.schedule(250200, {administrador.pararJuegoYMostrarGameOver() administrador.sonidoWin()})
         // Colisiones
-        game.onCollideDo(barry, {cosa => cosa.colisiono(barry)})  
+        game.onCollideDo(barry, {cosa => cosa.colisiono(barry)}) 
     }
 }

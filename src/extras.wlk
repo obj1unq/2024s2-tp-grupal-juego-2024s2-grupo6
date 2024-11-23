@@ -12,16 +12,6 @@ object generadorDeObjetos {
     method gravedad() {
         game.onTick(100, "gravedad", {barry.caer()}) 
     }
-
-    /*
-    method subirGravedad() {
-        game.onTick(50, "subirGravedad", {barry.volar()})
-    }
-
-    method bajarGravedad() {
-        game.onTick(50, "bajarGravedad", {barry.caer()})
-    }
-    */
 }
 
 class Generador {
@@ -81,6 +71,15 @@ object generadorDeMonedas inherits Generador{
     override method frecuenciaDeMovimiento() {
         return 400
     }
+
+    override method position() {
+        return if (barry.esMillonario()) {
+            game.at(12, barry.position().y())
+        }
+        else {
+            super()
+        }
+    }
 }
 
 object generadorDeTokens inherits Generador{
@@ -102,6 +101,7 @@ class ObjetoVolador {
     var property imagenes = null
     var property imagenActualIndex = 0
     var property generador = null
+    var property imagenActual = imagenes
 
     method cambiarImagen() {
         imagenActualIndex = (imagenActualIndex + 1) % imagenes.size()
@@ -129,7 +129,6 @@ class ObjetoVolador {
     }
 
     method desaparecer() {
-        //visible = false //revisar
         game.removeVisual(self) // Elimina el objeto actual
         game.removeTickEvent(self.nombreDeEventoMovimiento()) // Elimina el onTick de movimiento
         game.removeTickEvent(self.nombreDeEventoImagen()) // Elimina el onTick de imagen
@@ -160,10 +159,12 @@ class ObjetoVolador {
     method prefijoDeEvento() 
 }
 
-class Misil inherits ObjetoVolador {
+class Misil inherits ObjetoVolador() {
+
+    const explosiones = ["explosion1.png","explosion1.png","explosion1.png","explosion1.png","explosion1.png","explosion1.png"]
 
     override method image() {
-        return imagenes.get(imagenActualIndex)
+        return imagenActual.get(imagenActualIndex)
     }
 
     override method prefijoDeEvento() {
@@ -171,17 +172,18 @@ class Misil inherits ObjetoVolador {
     }
 
     method colisiono(personaje) {
-        if (contadorVidasBarry.vidas() == 1){
-            game.schedule(200, {administrador.pararJuegoYMostrarGameOver()})
-        } else if (contadorVidasBarry.vidas() >= 3){
-            administrador.sacarVida(1)
-        } else if (contadorVidasBarry.vidas() == 2){
-            personaje.transformacion().colisiono(personaje)
-        }
+        personaje.colisiono()
+        game.sound("explosion_misil.mp3").play()
+        barry.sacarMonedas(5)
+        self.explotar()
+    }
+
+    method explotar() {
+      imagenActual = explosiones
     }
 }
 
-class Token inherits ObjetoVolador {
+class Token inherits ObjetoVolador() {
 
     override method prefijoDeEvento() {
         return "token"
@@ -197,12 +199,13 @@ class Token inherits ObjetoVolador {
 
     method colisiono(personaje) {
         self.desaparecer()
+        game.sound("token.mp3").play()
         personaje.transformarse()
         self.reaparecer()
     }
 }
 
-class Coin inherits ObjetoVolador {
+class Coin inherits ObjetoVolador() {
 
     override method prefijoDeEvento() {
         return "coin"
@@ -210,6 +213,7 @@ class Coin inherits ObjetoVolador {
 
     method colisiono(personaje) {
         self.desaparecer()
+        game.sound("coin.mp3").play()
         personaje.agarroMoneda()
         self.reaparecer()
     }

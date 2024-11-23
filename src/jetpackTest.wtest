@@ -1,0 +1,134 @@
+import barry.*
+import extras.*
+import menu.*
+import posiciones.*
+
+describe "Test Jetpack" {
+    const token = new Token(generador = generadorDeTokens)
+    const misil = new Misil()
+    const moneda = new Coin(generador = generadorDeMonedas)
+    
+    method initialize() {
+        game.addVisual(fondoJuego)
+	    game.addVisual(reloj)
+	    game.addVisual(barry)
+        game.addVisual(contadorMonedas)
+        game.addVisual(contadorVidas)
+    }
+    
+
+    test "Al agarrar un token Barry se transforma" {
+        assert.equals(normal, barry.transformacion())
+        token.colisiono(barry)
+        assert.notThat(barry.transformacion() == normal) //Consultar si es correcto.
+        assert.that(barry.vidas() >= 2)
+        assert.that(contadorVidas.vidas(barry) >= 2)
+    }
+
+    test "Al estar transformado y teniendo 2 vidas si barry colisiona contra un misil, se destransforma" {
+        barry.transformarseA(millonario)
+        assert.equals("barryrich1.png", barry.image())
+        assert.equals(2, barry.vidas())
+        misil.colisiono(barry)
+        assert.equals(normal, barry.transformacion())
+        assert.equals(1, barry.vidas())
+    }
+
+    test "Al agarrar una moneda, se suma una moneda al contador, cuando barry es normal o ssj, si es millonario o profitBird suma 2" {
+        barry.transformarseA(normal)
+        moneda.colisiono(barry)
+        assert.equals(1, barry.monedas())
+
+        barry.transformarseA(ssj)
+        moneda.colisiono(barry)
+        assert.equals(2, barry.monedas())
+
+        barry.transformarseA(millonario)
+        moneda.colisiono(barry)
+        assert.equals(4, barry.monedas())
+
+        barry.transformarseA(profitBird)
+        moneda.colisiono(barry)
+        assert.equals(6, barry.monedas())
+    }
+
+    test "Al tener menos de 5 monedas y colisionar contra un misil, se restan 5 monedas pero no baja de 0" {
+        barry.monedas(3)
+        misil.colisiono(barry)
+        assert.equals(0, barry.monedas())
+    } 
+
+    test "Al tener monedas suficientes y pasar de nivel barry se equipa un escudo" {
+        contadorMonedas.monedas(25)
+        fondoJuego.nivel(2)
+        administradorEscudo.equiparEscudo(barry)
+        assert.equals(barryConEscudo, barry.transformacion())
+        assert.equals("barrynormalconescudo.png", barry.image())
+        assert.equals(2, barry.vidas())
+    }
+
+    test "Al tener 30 monedas o más y 100 de ki, barry puede lanzar el poder como ssj" {
+        barry.transformacion(ssj)
+        contadorMonedas.monedas(30)
+        barry.lanzarPoder()
+        assert.equals(0, ssj.ki())
+    }
+
+    test "Un misil explota al colisionar con Barry" {
+        misil.colisiono(barry)
+        assert.equals(["explosion1.png","explosion1.png","explosion1.png","explosion1.png","explosion1.png","explosion1.png"], misil.imagenActual())
+    }
+
+    test "Barry vuela" {
+        barry.position(game.at(1,2))
+        barry.volar()
+        assert.equals("barryvolando.png", barry.image())
+        assert.equals(game.at(1,3), barry.position())
+    }
+    
+    test "Barry cae" {
+        barry.position(game.at(1,3))
+        barry.caer()
+        assert.equals("barrynormal.png", barry.image())
+        assert.equals(game.at(1,2.82), barry.position())
+    }
+
+    test "Niveles" {
+        assert.equals(1, fondoJuego.nivel())
+        assert.equals("fondoo1.png", fondoJuego.image())
+        fondoJuego.subirNivel()
+        assert.equals(2, fondoJuego.nivel())
+        assert.equals("fondoo2.png", fondoJuego.image())
+        fondoJuego.subirNivel()
+        assert.equals(3, fondoJuego.nivel())
+        assert.equals("fondoo3.png", fondoJuego.image())
+        fondoJuego.subirNivel()
+        assert.equals(4, fondoJuego.nivel())
+        assert.equals("fondoo4.png", fondoJuego.image())
+        fondoJuego.subirNivel()
+        assert.equals(5, fondoJuego.nivel())
+        assert.equals("fondoo5.png", fondoJuego.image())
+    }
+
+    test "Al transformarse las vidas de barry aumentan y cambia su imagen" {
+        barry.transformarseA(normal)
+        assert.equals(1, barry.vidas())
+        assert.equals("barrynormal.png", barry.image())
+
+        barry.transformarseA(ssj)
+        assert.equals(3, barry.vidas())
+        assert.equals("barrysupersj1.png", barry.image())
+
+        barry.transformarseA(profitBird)
+        assert.equals(2, barry.vidas())
+        assert.equals("goldbird3.png", barry.image())
+
+        barry.transformarseA(barryConEscudo)
+        assert.equals(2, barry.vidas())
+        assert.equals("barrynormalconescudo.png", barry.image())
+
+        barry.transformarseA(millonario)
+        assert.equals(2, barry.vidas())
+        assert.equals("barryrich1.png", barry.image())
+    }
+}
