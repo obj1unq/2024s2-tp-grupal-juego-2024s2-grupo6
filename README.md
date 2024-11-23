@@ -8,21 +8,23 @@
 - Emanuel Menager
 
 ## Capturas
+- Menu Inicio  
+![Menu Inicio](https://raw.githubusercontent.com/obj1unq/2024s2-tp-grupal-juego-2024s2-grupo6/refs/heads/main/assets/menu.png)  
 
-![Menu Inicio](https://raw.githubusercontent.com/obj1unq/2024s2-tp-grupal-juego-2024s2-grupo6/refs/heads/main/assets/menu.png)
+- Menu Final  
+![Menu Final](https://raw.githubusercontent.com/obj1unq/2024s2-tp-grupal-juego-2024s2-grupo6/refs/heads/main/assets/FinalJuegoReadme.png)
 
-![Menu Final]()
 ### Niveles
 - Nivel 1  
-![Nivel 1]()  
+![Nivel 1](https://raw.githubusercontent.com/obj1unq/2024s2-tp-grupal-juego-2024s2-grupo6/refs/heads/main/assets/level1Readme.png)  
 - Nivel 2  
-![Nivel 2](https://github.com/obj1unq/2024s2-tp-grupal-juego-2024s2-grupo6/blob/main/assets/fondoo2.png)  
+![Nivel 2](https://raw.githubusercontent.com/obj1unq/2024s2-tp-grupal-juego-2024s2-grupo6/refs/heads/main/assets/level2Readme.png)  
 - Nivel 3  
-![Nivel 3]()  
+![Nivel 3](https://raw.githubusercontent.com/obj1unq/2024s2-tp-grupal-juego-2024s2-grupo6/refs/heads/main/assets/level3Readme.png)  
 - Nivel 4  
-![Nivel 4]()  
+![Nivel 4](https://raw.githubusercontent.com/obj1unq/2024s2-tp-grupal-juego-2024s2-grupo6/refs/heads/main/assets/level4Readme.png)  
 - Nivel 5  
-![Nivel 5]()  
+![Nivel 5](https://raw.githubusercontent.com/obj1unq/2024s2-tp-grupal-juego-2024s2-grupo6/refs/heads/main/assets/level5Readme.png)  
 
 ### Transformaciones
 - Barry Normal  
@@ -30,11 +32,11 @@
 - Barry SSJ  
 ![Barry SSJ](https://raw.githubusercontent.com/obj1unq/2024s2-tp-grupal-juego-2024s2-grupo6/refs/heads/main/assets/barrysupersj1.png)  
 - Barry ProfitBird  
-![Barry ]()  
+![Barry bird](https://raw.githubusercontent.com/obj1unq/2024s2-tp-grupal-juego-2024s2-grupo6/refs/heads/main/assets/goldbird1.png)  
 - Barry Millonario  
-![Barry ]()  
+![Barry millo](https://raw.githubusercontent.com/obj1unq/2024s2-tp-grupal-juego-2024s2-grupo6/refs/heads/main/assets/barryrich1.png)  
 - Barry con escudo  
-![Barry ]()  
+![Barry con escudo](https://raw.githubusercontent.com/obj1unq/2024s2-tp-grupal-juego-2024s2-grupo6/refs/heads/main/assets/barrynormalconescudo.png)  
 
 ## Reglas de Juego / Instrucciones
 
