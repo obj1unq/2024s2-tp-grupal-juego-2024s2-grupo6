@@ -72,7 +72,7 @@ Jetpack JoyRide es un juego de acción donde controlas a Barry, un personaje que
 Inicio del Juego: Presiona la tecla Enter para comenzar.  
   
 - Controles:  
-  - Tecla W: Activa el jetpack para hacer volar a Barry.  
+  - Flecha Arriba: Activa el jetpack para hacer volar a Barry.  
   - Barra espaciadora: Activa el poder especial en la transformación SSJ.  
 
 ### Progresión por Niveles
