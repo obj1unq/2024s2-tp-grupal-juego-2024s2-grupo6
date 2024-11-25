@@ -179,7 +179,7 @@ class Misil inherits ObjetoVolador() {
     }
 
     method explotar() {
-      imagenActual = explosiones
+        imagenActual = explosiones
     }
 }
 

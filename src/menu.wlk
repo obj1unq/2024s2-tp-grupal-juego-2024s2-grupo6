@@ -18,7 +18,7 @@ object administradorEscudo {
 }
 
 object administrador {
-    method pararJuegoYMostrarGameOver() {
+    method pararJuegoYMostrarResultado() {
         menu.sonido().stop()
         game.removeVisual(botonPlay)
 	    game.addVisual(fondoFinish)
@@ -149,10 +149,10 @@ object menu {
         game.removeVisual(botonPlay)
         sonido.shouldLoop(true)
         sonido.play()
+        sonido.volume(0.3)
         // Llamar a la función de inicialización del juego
         self.iniciarJuego()
     }
-
 
     method iniciarJuego() {
 	    game.addVisual(fondoJuego)
@@ -182,7 +182,7 @@ object menu {
   
         game.onTick(50000, "fondo", {fondoJuego.subirNivel()})
         game.onTick(50100, "barryescudo", {administradorEscudo.equiparEscudo(barry)})
-        game.schedule(250200, {administrador.pararJuegoYMostrarGameOver() administrador.sonidoWin()})
+        game.schedule(250200, {administrador.pararJuegoYMostrarResultado() administrador.sonidoWin()})
         // Colisiones
         game.onCollideDo(barry, {cosa => cosa.colisiono(barry)}) 
     }

@@ -137,7 +137,7 @@ object normal inherits Transformacion(image = "barrynormal.png", vidas = 1) {
 	}
 
 	override method colisiono(personaje) {
-		game.schedule(200, {administrador.pararJuegoYMostrarGameOver() administrador.sonidoGameOver()})
+		game.schedule(200, {administrador.pararJuegoYMostrarResultado() administrador.sonidoGameOver()})
 	}
 }
 
