@@ -18,19 +18,31 @@ object administradorEscudo {
 }
 
 object administrador {
+    /*
     method pararJuegoYMostrarResultado() {
         menu.sonido().stop()
         game.removeVisual(botonPlay)
 	    game.addVisual(fondoFinish)
         game.addVisual(hasVolado)
-	    game.addVisual(gameOver)
-        game.sound("gameover.mp3").play()
-        reloj.position(game.at(5,7))
+        reloj.position(game.at(5,5))
         contadorMonedas.position(game.at(6,2))
         contadorVidas.position(game.at(11,11))
 	    game.schedule(100,{game.stop()})
     }
-
+    */
+    method pararJuegoYMostrarResultado(condicion) {
+        menu.sonido().stop()
+        game.removeVisual(botonPlay)
+	    game.addVisual(fondoFinish)
+        game.addVisual(hasVolado)
+        condicion.sonido()
+        condicion.fondo()
+        reloj.position(game.at(5,5))
+        contadorMonedas.position(game.at(6,2))
+        contadorVidas.position(game.at(11,11))
+	    game.schedule(100,{game.stop()})
+    }
+    /*
     method sonidoWin() {
         game.sound("musicawin.mp3").play()
     }
@@ -38,7 +50,37 @@ object administrador {
     method sonidoGameOver() {
         game.sound("gameover.mp3").play()
     }
-} 
+
+    method fondoWin() {
+        game.addVisual(ganaste)
+    }
+
+    method fondoGameOver() {
+        game.addVisual(gameOver)
+    }
+    */
+}
+
+object ganador {
+    method sonido() {
+        game.sound("musicawin.mp3").play()
+    }
+
+    method fondo() {
+        game.addVisual(ganaste)
+    }
+}
+
+object perdedor {
+
+    method sonido() {
+        game.sound("gameover.mp3").play()
+    }
+
+    method fondo() {
+        game.addVisual(gameOver)
+    }
+}
 
 object contadorMonedas {
     var property monedas = 0
@@ -86,7 +128,7 @@ object hasVolado {
         return "Volado.png"
     } 
 
-    method position() = game.at(4,8)
+    method position() = game.at(4,6)
 }
 
 object fondoFinish {
@@ -125,7 +167,15 @@ object gameOver {
         return "gameover.png"
     }
 
-    method position() = game.at(6,10)
+    method position() = game.at(4,7)
+}
+
+object ganaste {
+    method image() {
+        return "ganaste.png"
+    }
+
+    method position() = game.at(3,7)
 }
 object menu {
     var property juegoIniciado = false
@@ -182,7 +232,8 @@ object menu {
   
         game.onTick(50000, "fondo", {fondoJuego.subirNivel()})
         game.onTick(50100, "barryescudo", {administradorEscudo.equiparEscudo(barry)})
-        game.schedule(250200, {administrador.pararJuegoYMostrarResultado() administrador.sonidoWin()})
+        //game.schedule(250200, {administrador.pararJuegoYMostrarResultado() administrador.sonidoWin() administrador.fondoWin()})
+        game.schedule(50000, {administrador.pararJuegoYMostrarResultado(ganador)})
         // Colisiones
         game.onCollideDo(barry, {cosa => cosa.colisiono(barry)}) 
     }

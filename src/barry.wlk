@@ -32,7 +32,7 @@ object barry {
 	}
 
 	method transformarse() {
-		if (0.randomUpTo(100) < 30) {
+		if (0.randomUpTo(100) < 100) {
 			self.transformarseA(ssj)
 			game.onTick(60, "ssjimagen", {ssj.cambiarImagen()})
 		} else if(0.randomUpTo(100) < 50) {
@@ -137,7 +137,8 @@ object normal inherits Transformacion(image = "barrynormal.png", vidas = 1) {
 	}
 
 	override method colisiono(personaje) {
-		game.schedule(200, {administrador.pararJuegoYMostrarResultado() administrador.sonidoGameOver()})
+		//game.schedule(200, {administrador.pararJuegoYMostrarResultado() administrador.sonidoGameOver() administrador.fondoGameOver()})
+		game.schedule(200, {administrador.pararJuegoYMostrarResultado(perdedor)})
 	}
 }
 
@@ -148,7 +149,7 @@ object ssj inherits Transformacion (image = ["barrysupersj1.png", "barrysupersj2
 	var property ki = 100
 
 	override method lanzarPoder() {
-	  if (contadorMonedas.monedas() >= 30 and self.ki() == 100){
+	  if (contadorMonedas.monedas() >= 4 and self.ki() == 100){
 		game.removeTickEvent("ssjimagen")
 		imagenesActual = imagenesPoder
 		game.onTick(200, "ssjimagen", {self.cambiarImagen()})
@@ -161,9 +162,10 @@ object ssj inherits Transformacion (image = ["barrysupersj1.png", "barrysupersj2
 	}
 
 	method ponerImagenesDefault() {
-	 game.removeTickEvent("ssjimagen") 
-	 imagenesActual = image
-	 game.onTick(60, "ssjimagen", {self.cambiarImagen()}) 
+	 	game.removeTickEvent("ssjimagen") 
+	 	imagenesActual = image
+	 	game.onTick(60, "ssjimagen", {self.cambiarImagen()})
+		self.imagenesDefaultPoder()
 	}
 
 	override method image() {
@@ -194,6 +196,10 @@ object ssj inherits Transformacion (image = ["barrysupersj1.png", "barrysupersj2
 	override method resetear() {
 		game.removeTickEvent("ssjimagen")
 		ki = 100
+		self.imagenesDefaultPoder()
+	}
+
+	method imagenesDefaultPoder() {
 		picolo.ponerImagenesDefault()
 		vegeta.ponerImagenesDefault()
 		gohan.ponerImagenesDefault()

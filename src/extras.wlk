@@ -160,7 +160,7 @@ class ObjetoVolador {
 }
 
 class Misil inherits ObjetoVolador() {
-
+    var property estado = activo
     const explosiones = ["explosion1.png","explosion1.png","explosion1.png","explosion1.png","explosion1.png","explosion1.png"]
 
     override method image() {
@@ -172,14 +172,27 @@ class Misil inherits ObjetoVolador() {
     }
 
     method colisiono(personaje) {
-        personaje.colisiono()
-        game.sound("explosion_misil.mp3").play()
-        barry.sacarMonedas(5)
-        self.explotar()
+        estado.colisiono(personaje, self)
     }
 
     method explotar() {
         imagenActual = explosiones
+    }
+}
+
+object activo {
+    method colisiono(personaje, misil) {
+        personaje.colisiono()
+        game.sound("explosion_misil.mp3").play()
+        barry.sacarMonedas(5)
+        misil.explotar()
+        misil.estado(inactivo)
+    }
+}
+
+object inactivo {
+    method colisiono(personaje, misil) {
+
     }
 }
 
