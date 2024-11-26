@@ -16,11 +16,10 @@ describe "Test Jetpack" {
         game.addVisual(contadorVidas)
     }
     
-
     test "Al agarrar un token Barry se transforma" {
         assert.equals(normal, barry.transformacion())
         token.colisiono(barry)
-        assert.notThat(barry.transformacion() == normal) //Consultar si es correcto.
+        assert.notEquals(normal, barry.transformacion())
         assert.that(barry.vidas() >= 2)
         assert.that(contadorVidas.vidas(barry) >= 2)
     }

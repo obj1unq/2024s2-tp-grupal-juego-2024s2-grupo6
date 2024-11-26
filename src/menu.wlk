@@ -30,17 +30,17 @@ object administrador {
 	    game.schedule(100,{game.stop()})
     }
     */
-    method pararJuegoYMostrarResultado(condicion) {
+    method pararJuegoYMostrarResultado(resultadoJuego) {
         menu.sonido().stop()
         game.removeVisual(botonPlay)
 	    game.addVisual(fondoFinish)
         game.addVisual(hasVolado)
-        condicion.sonido()
-        condicion.fondo()
+        resultadoJuego.sonido()
+        resultadoJuego.fondo()
         reloj.position(game.at(5,5))
         contadorMonedas.position(game.at(6,2))
         contadorVidas.position(game.at(11,11))
-	    game.schedule(100,{game.stop()})
+	    game.schedule(1000,{game.stop()})
     }
     /*
     method sonidoWin() {
