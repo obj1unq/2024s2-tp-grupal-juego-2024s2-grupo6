@@ -12,7 +12,7 @@
 ![Menu Inicio](https://raw.githubusercontent.com/obj1unq/2024s2-tp-grupal-juego-2024s2-grupo6/refs/heads/main/assets/menu.png)  
 
 - Menu Final  
-![Menu Final](https://raw.githubusercontent.com/obj1unq/2024s2-tp-grupal-juego-2024s2-grupo6/refs/heads/main/assets/FinalJuegoReadme.png)  
+![Menu Final](https://raw.githubusercontent.com/obj1unq/2024s2-tp-grupal-juego-2024s2-grupo6/refs/heads/main/assets/MenuFinalReadme.png)  
 
 - GameOver  
 ![GameOver](https://raw.githubusercontent.com/obj1unq/2024s2-tp-grupal-juego-2024s2-grupo6/refs/heads/main/assets/GameOverReadme.png)
