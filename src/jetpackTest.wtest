@@ -128,16 +128,16 @@ describe "Test Jetpack" {
     test "Niveles" {
         assert.equals(1, nivelJuego.nivel())
         assert.equals("fondoo1.png", nivelJuego.image())
-        {nivelJuego.subirNivel()}
+        assert.throwsException({nivelJuego.subirNivel()})
         assert.equals(2, nivelJuego.nivel())
         assert.equals("fondoo2.png", nivelJuego.image())
-        {nivelJuego.subirNivel()}
+        assert.throwsException({nivelJuego.subirNivel()})
         assert.equals(3, nivelJuego.nivel())
         assert.equals("fondoo3.png", nivelJuego.image())
-        {nivelJuego.subirNivel()}
+        assert.throwsException({nivelJuego.subirNivel()})
         assert.equals(4, nivelJuego.nivel())
         assert.equals("fondoo4.png", nivelJuego.image())
-        {nivelJuego.subirNivel()}
+        assert.throwsException({nivelJuego.subirNivel()})
         assert.equals(5, nivelJuego.nivel())
         assert.equals("fondoo5.png", nivelJuego.image())
     }

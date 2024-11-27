@@ -135,7 +135,7 @@ class ObjetoVolador {
     }
 
     method image() {
-        return imagenes.get(imagenActualIndex) //if (visible) imagenes.get(imagenActualIndex) else null
+        return imagenes.get(imagenActualIndex)
     }
 
     method aparecer(frecuenciaImagen, frecuenciaMovimiento) {
