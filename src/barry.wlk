@@ -32,7 +32,7 @@ object barry {
 	}
 
 	method transformarse() {
-		if (0.randomUpTo(100) < 100) {
+		if (0.randomUpTo(100) < 30) {
 			self.transformarseA(ssj)
 			game.onTick(60, "ssjimagen", {ssj.cambiarImagen()})
 		} else if(0.randomUpTo(100) < 50) {
@@ -137,7 +137,6 @@ object normal inherits Transformacion(image = "barrynormal.png", vidas = 1) {
 	}
 
 	override method colisiono(personaje) {
-		//game.schedule(200, {administrador.pararJuegoYMostrarResultado() administrador.sonidoGameOver() administrador.fondoGameOver()})
 		game.schedule(200, {administrador.pararJuegoYMostrarResultado(perdedor)})
 	}
 }
@@ -149,7 +148,7 @@ object ssj inherits Transformacion (image = ["barrysupersj1.png", "barrysupersj2
 	var property ki = 100
 
 	override method lanzarPoder() {
-	  if (contadorMonedas.monedas() >= 4 and self.ki() == 100){
+	  	self.validarLanzarPoder()
 		game.removeTickEvent("ssjimagen")
 		imagenesActual = imagenesPoder
 		game.onTick(200, "ssjimagen", {self.cambiarImagen()})
@@ -158,7 +157,16 @@ object ssj inherits Transformacion (image = ["barrysupersj1.png", "barrysupersj2
 		vegeta.lanzarPoder()
 		gohan.lanzarPoder()
 		self.ki(0)
-	  }
+	}
+
+	method validarLanzarPoder() {
+		if (not self.puedeLanzarPoder()) {
+			self.error("No puedo lanzar el poder")
+		}
+	}
+
+	method puedeLanzarPoder() {
+		return contadorMonedas.monedas() >= 30 and self.ki() == 100
 	}
 
 	method ponerImagenesDefault() {

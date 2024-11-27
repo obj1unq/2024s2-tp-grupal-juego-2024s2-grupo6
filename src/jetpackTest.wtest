@@ -9,7 +9,7 @@ describe "Test Jetpack" {
     const moneda = new Coin(generador = generadorDeMonedas)
     
     method initialize() {
-        game.addVisual(fondoJuego)
+        game.addVisual(nivelJuego)
 	    game.addVisual(reloj)
 	    game.addVisual(barry)
         game.addVisual(contadorMonedas)
@@ -59,7 +59,7 @@ describe "Test Jetpack" {
 
     test "Al tener monedas suficientes y pasar de nivel barry se equipa un escudo" {
         contadorMonedas.monedas(25)
-        fondoJuego.nivel(2)
+        nivelJuego.nivel(2)
         administradorEscudo.equiparEscudo(barry)
         assert.equals(barryConEscudo, barry.transformacion())
         assert.equals("barrynormalconescudo.png", barry.image())
@@ -93,20 +93,20 @@ describe "Test Jetpack" {
     }
 
     test "Niveles" {
-        assert.equals(1, fondoJuego.nivel())
-        assert.equals("fondoo1.png", fondoJuego.image())
-        fondoJuego.subirNivel()
-        assert.equals(2, fondoJuego.nivel())
-        assert.equals("fondoo2.png", fondoJuego.image())
-        fondoJuego.subirNivel()
-        assert.equals(3, fondoJuego.nivel())
-        assert.equals("fondoo3.png", fondoJuego.image())
-        fondoJuego.subirNivel()
-        assert.equals(4, fondoJuego.nivel())
-        assert.equals("fondoo4.png", fondoJuego.image())
-        fondoJuego.subirNivel()
-        assert.equals(5, fondoJuego.nivel())
-        assert.equals("fondoo5.png", fondoJuego.image())
+        assert.equals(1, nivelJuego.nivel())
+        assert.equals("fondoo1.png", nivelJuego.image())
+        assert.throwsException({nivelJuego.subirNivel()})
+        assert.equals(2, nivelJuego.nivel())
+        assert.equals("fondoo2.png", nivelJuego.image())
+        assert.throwsException({nivelJuego.subirNivel()})
+        assert.equals(3, nivelJuego.nivel())
+        assert.equals("fondoo3.png", nivelJuego.image())
+        assert.throwsException({nivelJuego.subirNivel()})
+        assert.equals(4, nivelJuego.nivel())
+        assert.equals("fondoo4.png", nivelJuego.image())
+        assert.throwsException({nivelJuego.subirNivel()})
+        assert.equals(5, nivelJuego.nivel())
+        assert.equals("fondoo5.png", nivelJuego.image())
     }
 
     test "Al transformarse las vidas de barry aumentan y cambia su imagen" {

@@ -5,31 +5,24 @@ import extras.*
 import randomizer.*
 
 object administradorEscudo {
-
+    
     method equiparEscudo(personaje) {
-        if (self.validarEscudo()) {
-            personaje.equiparseEscudo()
+        self.validarEquiparseEscudo(personaje)
+        personaje.equiparseEscudo()
+    }
+    
+    method validarEquiparseEscudo(personaje) {
+        if (not self.puedeEquiparseEscudo()) {
+            self.error("No tengo suficientes monedas para el escudo")
         }
     }
 
-    method validarEscudo() {
-        return contadorMonedas.tieneSuficienteParaEscudo(fondoJuego.nivel()) //Está hecho asi porque la validación en wollokGame no nos funcionaba muy bien.
+    method puedeEquiparseEscudo() {
+        return contadorMonedas.tieneSuficienteParaEscudo(nivelJuego.nivel())
     }
 }
 
 object administrador {
-    /*
-    method pararJuegoYMostrarResultado() {
-        menu.sonido().stop()
-        game.removeVisual(botonPlay)
-	    game.addVisual(fondoFinish)
-        game.addVisual(hasVolado)
-        reloj.position(game.at(5,5))
-        contadorMonedas.position(game.at(6,2))
-        contadorVidas.position(game.at(11,11))
-	    game.schedule(100,{game.stop()})
-    }
-    */
     method pararJuegoYMostrarResultado(resultadoJuego) {
         menu.sonido().stop()
         game.removeVisual(botonPlay)
@@ -42,23 +35,6 @@ object administrador {
         contadorVidas.position(game.at(11,11))
 	    game.schedule(1000,{game.stop()})
     }
-    /*
-    method sonidoWin() {
-        game.sound("musicawin.mp3").play()
-    }
-
-    method sonidoGameOver() {
-        game.sound("gameover.mp3").play()
-    }
-
-    method fondoWin() {
-        game.addVisual(ganaste)
-    }
-
-    method fondoGameOver() {
-        game.addVisual(gameOver)
-    }
-    */
 }
 
 object ganador {
@@ -139,7 +115,7 @@ object fondoFinish {
     method position() = game.at(1,1)
 }
 
-object fondoJuego {
+object nivelJuego {
     var property nivel = 1
 
     method image() {
@@ -149,6 +125,16 @@ object fondoJuego {
     method subirNivel() {
         game.sound("levelup.mp3").play()
         nivel += 1
+        self.aumentarCantidadMisiles()
+        self.aumentarVelocidadMisiles()
+    }
+
+    method aumentarVelocidadMisiles() {
+        generadorDeMisiles.aumentarVelocidad()
+    }
+
+    method aumentarCantidadMisiles() {
+        generadorDeMisiles.construir()
     }
 
     method position() = game.at(0,0)
@@ -205,7 +191,7 @@ object menu {
     }
 
     method iniciarJuego() {
-	    game.addVisual(fondoJuego)
+	    game.addVisual(nivelJuego)
 	    game.addVisual(reloj)
 	    game.addVisual(barry)
         game.addVisual(contadorMonedas)
@@ -214,8 +200,6 @@ object menu {
 	    // Crear instancias de clases
         generadorDeMisiles.construir()
         game.schedule(1000, {generadorDeMisiles.construir()})
-        game.onTick(50000, "masMisiles" ,{generadorDeMisiles.construir()})
-        game.onTick(50000, "masVelocidad" ,{generadorDeMisiles.aumentarVelocidad()})
 	    generadorDeMonedas.construir()
         game.schedule(500, {generadorDeMonedas.construir()})
         game.schedule(700, {generadorDeMonedas.construir()})
@@ -230,10 +214,9 @@ object menu {
 	    keyboard.up().onPressDo({barry.volar()})
         keyboard.space().onPressDo({barry.lanzarPoder()})
   
-        game.onTick(50000, "fondo", {fondoJuego.subirNivel()})
+        game.onTick(50000, "fondo", {nivelJuego.subirNivel()})
         game.onTick(50100, "barryescudo", {administradorEscudo.equiparEscudo(barry)})
-        //game.schedule(250200, {administrador.pararJuegoYMostrarResultado() administrador.sonidoWin() administrador.fondoWin()})
-        game.schedule(50000, {administrador.pararJuegoYMostrarResultado(ganador)})
+        game.schedule(250200, {administrador.pararJuegoYMostrarResultado(ganador)})
         // Colisiones
         game.onCollideDo(barry, {cosa => cosa.colisiono(barry)}) 
     }
