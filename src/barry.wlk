@@ -309,7 +309,7 @@ object millonario inherits Transformacion(image = "barryrich1.png", vidas = 2){
 	  	image = "barryrich1.png"
 	}
 
-	override method cantidadMonedasQueAgarra() { //Se puede heredar de profitBird?
+	override method cantidadMonedasQueAgarra() {
 		return 2
 	}
 
