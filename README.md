@@ -9,7 +9,7 @@
 
 ## Capturas
 - Menu Inicio  
-![Menu Inicio](https://raw.githubusercontent.com/obj1unq/2024s2-tp-grupal-juego-2024s2-grupo6/refs/heads/main/assets/menu.png)  
+![Menu Inicio](https://raw.githubusercontent.com/obj1unq/2024s2-tp-grupal-juego-2024s2-grupo6/refs/heads/main/assets/MenuInicioReadme.png)  
 
 - Menu Final  
 ![Menu Final](https://raw.githubusercontent.com/obj1unq/2024s2-tp-grupal-juego-2024s2-grupo6/refs/heads/main/assets/MenuFinalReadme.png)  
