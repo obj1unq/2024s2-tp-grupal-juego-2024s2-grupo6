@@ -15,7 +15,7 @@
 ![Menu Final](https://raw.githubusercontent.com/obj1unq/2024s2-tp-grupal-juego-2024s2-grupo6/refs/heads/main/assets/FinalJuegoReadme.png)  
 
 - GameOver  
-![GameOver](https://raw.githubusercontent.com/obj1unq/2024s2-tp-grupal-juego-2024s2-grupo6/refs/heads/main/assets/FinalJuegoReadme.png)
+![GameOver](https://raw.githubusercontent.com/obj1unq/2024s2-tp-grupal-juego-2024s2-grupo6/refs/heads/main/assets/GameOverReadme.png)
 
 ### Niveles
 - Nivel 1  
